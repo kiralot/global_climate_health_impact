@@ -1,11 +1,27 @@
-pandas
-numpy
-matplotlib
-seaborn
-plotly
-scipy
-scikit-learn
-statsmodels
-cdsapi
-python-dotenv
-requests
+# Core data processing
+pandas==2.3.3
+numpy<2
+xarray==2025.10.1
+netCDF4==1.7.3
+h5netcdf==1.4.1
+
+# Machine Learning
+scikit-learn==1.5.2
+joblib==1.4.2
+
+# Visualization
+matplotlib==3.9.3
+seaborn==0.13.2
+plotly==5.24.1
+
+# Dashboard
+streamlit==1.40.2
+
+# API and data download
+requests==2.32.3
+cdsapi==0.7.5
+python-dotenv==1.0.1
+
+# Utilities
+cftime==1.6.5
+certifi==2025.4.26
