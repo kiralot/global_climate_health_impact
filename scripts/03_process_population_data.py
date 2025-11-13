@@ -29,5 +29,4 @@ with open(os.path.join(PROCESSED_DATA_DIR, 'selected_countries.txt'), 'w') as f:
     for country in sorted(common_countries):
         f.write(f"{country}\n")
 
-print("Datasets actualizados con 49 países comunes")
 print(f"Archivos actualizados en: {PROCESSED_DATA_DIR}")

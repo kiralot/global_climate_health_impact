@@ -1,0 +1,156 @@
+Cause,Climate_Variable,Correlation
+Neoplasms,Temperature_C,-0.7344209919960508
+Cardiovascular Diseases,Temperature_C,-0.6978891698356384
+Parkinson's Disease,Temperature_C,-0.6072204484818838
+Alcohol Use Disorders,Temperature_C,-0.5795933946792131
+Alzheimer's Disease and Other Dementias,Temperature_C,-0.5650288846041548
+Environmental Heat and Cold Exposure,Temperature_C,-0.46943134002049175
+Maternal Disorders,Temperature_C,0.4643688289138188
+Drowning,Precipitation_mm,0.4603587420711464
+Cardiovascular Diseases,Dewpoint_K,-0.4502422564301571
+Neonatal Disorders,Temperature_C,0.44721842965421343
+Self-harm,Temperature_C,-0.44360184254540735
+Alcohol Use Disorders,Dewpoint_K,-0.4421488662373938
+Neoplasms,Dewpoint_K,-0.41816093369578416
+Diarrheal Diseases,Temperature_C,0.397874098894239
+Neonatal Disorders,Surface_Pressure_Pa,-0.3978705659281094
+"Fire, Heat, and Hot Substances",Surface_Pressure_Pa,-0.384006007472286
+Environmental Heat and Cold Exposure,Dewpoint_K,-0.38285273688856253
+Acute Hepatitis,Temperature_C,0.37494551582148605
+Drug Use Disorders,Temperature_C,-0.3727668722981601
+Digestive Diseases,Surface_Pressure_Pa,0.37055251081615925
+Alzheimer's Disease and Other Dementias,Dewpoint_K,-0.3601969820718123
+Tuberculosis,Temperature_C,0.35978971047835934
+Nutritional Deficiencies,Temperature_C,0.35568871644802724
+Protein-Energy Malnutrition,Temperature_C,0.35133159584989815
+Diabetes Mellitus,Dewpoint_K,0.3475135571121472
+Poisonings,Surface_Pressure_Pa,-0.34707767102074266
+Drug Use Disorders,Dewpoint_K,-0.3457050409109556
+Maternal Disorders,Dewpoint_K,0.33923222832544986
+Maternal Disorders,Surface_Pressure_Pa,-0.33302057099118265
+Meningitis,Surface_Pressure_Pa,-0.33261467168683867
+Drowning,Dewpoint_K,0.3323860230069216
+Parkinson's Disease,Dewpoint_K,-0.32316296343570006
+Chronic Respiratory Diseases,Temperature_C,-0.3140608805665236
+Maternal Disorders,Precipitation_mm,0.31055376018849745
+Meningitis,Temperature_C,0.3086645008558227
+HIV/AIDS,Surface_Pressure_Pa,-0.30833809552571256
+Lower Respiratory Infections,Precipitation_mm,0.3068952057348773
+Chronic Respiratory Diseases,Precipitation_mm,0.30647811085242294
+Diabetes Mellitus,Precipitation_mm,0.28974835735232657
+Tuberculosis,Dewpoint_K,0.28742929236846765
+Tuberculosis,Surface_Pressure_Pa,-0.28153697361313645
+Chronic Kidney Disease,Surface_Pressure_Pa,0.2806125143871787
+Parkinson's Disease,Surface_Pressure_Pa,0.2772193191223873
+"Fire, Heat, and Hot Substances",Precipitation_mm,0.2716977469296953
+Protein-Energy Malnutrition,Dewpoint_K,0.27123831411033433
+Diarrheal Diseases,Dewpoint_K,0.27059431481441754
+Diarrheal Diseases,Surface_Pressure_Pa,-0.26769034557784427
+Nutritional Deficiencies,Dewpoint_K,0.26672905531707003
+Lower Respiratory Infections,Surface_Pressure_Pa,-0.26062662347979765
+Chronic Kidney Disease,Wind_Speed_ms,0.24741679984134232
+Malaria,Surface_Pressure_Pa,-0.23999733835251383
+Poisonings,Dewpoint_K,-0.23656769601631863
+Drowning,Temperature_C,0.2336723929577859
+Road Injuries,Temperature_C,0.23255498940381394
+Diabetes Mellitus,Wind_Speed_ms,0.22544788728063675
+Digestive Diseases,Temperature_C,-0.22480984592921968
+Neoplasms,Surface_Pressure_Pa,0.2227938202443414
+Meningitis,Dewpoint_K,0.22152410003801418
+"Fire, Heat, and Hot Substances",Dewpoint_K,-0.21864598582095754
+Diarrheal Diseases,Precipitation_mm,0.21720822971221182
+Malaria,Temperature_C,0.21368851136010783
+Malaria,Dewpoint_K,0.20933414229598601
+Lower Respiratory Infections,Dewpoint_K,0.20746715537734242
+Diabetes Mellitus,Temperature_C,0.2014996896111423
+Diarrheal Diseases,Wind_Speed_ms,-0.20071846744561414
+Cirrhosis and Other Chronic Liver Diseases,Surface_Pressure_Pa,0.19843163043544684
+Alzheimer's Disease and Other Dementias,Precipitation_mm,-0.19800314201110294
+Self-harm,Dewpoint_K,-0.19751143476478236
+"Fire, Heat, and Hot Substances",Wind_Speed_ms,-0.18876105738471624
+Neoplasms,Wind_Speed_ms,-0.18853047535412834
+Neonatal Disorders,Dewpoint_K,0.18777360213881553
+Drug Use Disorders,Precipitation_mm,-0.18564169178535928
+Cardiovascular Diseases,Wind_Speed_ms,-0.18494647981355739
+Interpersonal Violence,Wind_Speed_ms,0.1846020387596138
+Malaria,Precipitation_mm,0.18447949684036077
+Acute Hepatitis,Dewpoint_K,0.18249635765838518
+Nutritional Deficiencies,Surface_Pressure_Pa,-0.177260722902979
+Alzheimer's Disease and Other Dementias,Surface_Pressure_Pa,0.17688907360098302
+Malaria,Wind_Speed_ms,-0.17640209406148186
+Protein-Energy Malnutrition,Surface_Pressure_Pa,-0.17614261157625866
+Digestive Diseases,Precipitation_mm,-0.17552979459339813
+Neoplasms,Precipitation_mm,-0.1740746829885065
+Self-harm,Surface_Pressure_Pa,0.17364046794504928
+Alzheimer's Disease and Other Dementias,Wind_Speed_ms,-0.17355096575287532
+Lower Respiratory Infections,Temperature_C,0.17252120326878134
+Poisonings,Wind_Speed_ms,-0.16885279142971216
+Cardiovascular Diseases,Surface_Pressure_Pa,0.16445892135668339
+Interpersonal Violence,Temperature_C,0.1541236859295275
+Drug Use Disorders,Wind_Speed_ms,-0.15287210490873326
+Acute Hepatitis,Surface_Pressure_Pa,-0.15115326080986022
+Diabetes Mellitus,Surface_Pressure_Pa,0.15004543880529955
+Neonatal Disorders,Wind_Speed_ms,-0.14959589890132466
+HIV/AIDS,Temperature_C,0.14827337671507143
+Parkinson's Disease,Precipitation_mm,-0.14064541708970002
+Alcohol Use Disorders,Surface_Pressure_Pa,0.13940504659569153
+Meningitis,Wind_Speed_ms,-0.13300483580789732
+Meningitis,Precipitation_mm,0.13183282185444933
+Alcohol Use Disorders,Precipitation_mm,-0.13104803536849066
+HIV/AIDS,Wind_Speed_ms,-0.130572367758278
+Road Injuries,Surface_Pressure_Pa,-0.12933234790977646
+Tuberculosis,Wind_Speed_ms,-0.12847568360963948
+Maternal Disorders,Wind_Speed_ms,-0.12787850809315615
+Interpersonal Violence,Dewpoint_K,0.1268084580238515
+Poisonings,Temperature_C,-0.12665321628871745
+Conflict and Terrorism,Temperature_C,0.12553853264867576
+Chronic Kidney Disease,Dewpoint_K,0.11913881218361716
+Cirrhosis and Other Chronic Liver Diseases,Precipitation_mm,-0.11557665578895662
+Lower Respiratory Infections,Wind_Speed_ms,-0.11518698907197675
+Environmental Heat and Cold Exposure,Wind_Speed_ms,-0.10848270858984416
+Chronic Kidney Disease,Temperature_C,0.10847191839044114
+Chronic Respiratory Diseases,Wind_Speed_ms,-0.10780737078946065
+Conflict and Terrorism,Surface_Pressure_Pa,-0.10051462812877245
+Parkinson's Disease,Wind_Speed_ms,-0.0998978318244129
+"Fire, Heat, and Hot Substances",Temperature_C,-0.09960313242096432
+Tuberculosis,Precipitation_mm,0.09912955169964578
+Chronic Respiratory Diseases,Surface_Pressure_Pa,-0.09573208039368125
+Digestive Diseases,Dewpoint_K,-0.08222194468989213
+Drug Use Disorders,Surface_Pressure_Pa,0.07980022097696726
+Conflict and Terrorism,Precipitation_mm,-0.07384306930231574
+Interpersonal Violence,Precipitation_mm,-0.0690658102903139
+Self-harm,Wind_Speed_ms,-0.06836731336515918
+Cirrhosis and Other Chronic Liver Diseases,Temperature_C,0.06779964244513755
+Self-harm,Precipitation_mm,0.06668376880913308
+Chronic Kidney Disease,Precipitation_mm,-0.06599283656648927
+Environmental Heat and Cold Exposure,Precipitation_mm,-0.065778412336647
+Exposure to Forces of Nature,Precipitation_mm,0.0639743942484294
+Acute Hepatitis,Precipitation_mm,0.0611130383055063
+HIV/AIDS,Dewpoint_K,0.05935625275585812
+Conflict and Terrorism,Wind_Speed_ms,-0.05876472224388434
+Exposure to Forces of Nature,Dewpoint_K,0.058367267551973134
+Exposure to Forces of Nature,Temperature_C,0.057457471507014635
+Acute Hepatitis,Wind_Speed_ms,-0.054334029023416185
+Road Injuries,Dewpoint_K,-0.052308414670762325
+Neonatal Disorders,Precipitation_mm,0.05079942379494113
+Interpersonal Violence,Surface_Pressure_Pa,0.05047946277240468
+Digestive Diseases,Wind_Speed_ms,0.04253684148284178
+HIV/AIDS,Precipitation_mm,-0.03862274170014438
+Alcohol Use Disorders,Wind_Speed_ms,-0.037796374902582815
+Cirrhosis and Other Chronic Liver Diseases,Wind_Speed_ms,0.03677215984501807
+Poisonings,Precipitation_mm,0.0318453009135294
+Cardiovascular Diseases,Precipitation_mm,-0.028045608924132454
+Environmental Heat and Cold Exposure,Surface_Pressure_Pa,-0.025458045617947893
+Chronic Respiratory Diseases,Dewpoint_K,-0.021305410775993492
+Conflict and Terrorism,Dewpoint_K,-0.01861399561709302
+Road Injuries,Precipitation_mm,0.016717039865042967
+Drowning,Wind_Speed_ms,0.014943182543231874
+Exposure to Forces of Nature,Wind_Speed_ms,-0.012153527567120558
+Nutritional Deficiencies,Wind_Speed_ms,-0.010309093370164515
+Drowning,Surface_Pressure_Pa,0.009807449211667452
+Protein-Energy Malnutrition,Precipitation_mm,0.008299648075717318
+Exposure to Forces of Nature,Surface_Pressure_Pa,-0.007656362700478158
+Cirrhosis and Other Chronic Liver Diseases,Dewpoint_K,0.006112183033398109
+Road Injuries,Wind_Speed_ms,-0.006059191690606794
+Nutritional Deficiencies,Precipitation_mm,0.0031716201577049984
+Protein-Energy Malnutrition,Wind_Speed_ms,2.2740033889200276e-05
