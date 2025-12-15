@@ -214,6 +214,16 @@ El dashboard se abrirá automáticamente en `http://localhost:8501`
 
 ## Dashboard
 
+### 🌐 Demo Online
+
+**[Ver Dashboard en vivo →](https://tu-url-aqui.streamlit.app)**
+
+### Local
+
+```bash
+streamlit run dashboard/app.py
+```
+
 El dashboard interactivo incluye 5 módulos principales:
 
 ### 📊 Overview
