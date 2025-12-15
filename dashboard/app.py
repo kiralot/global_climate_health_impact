@@ -452,7 +452,7 @@ st.sidebar.header("Filters")
 selected_countries = st.sidebar.multiselect(
     "Select Countries",
     options=sorted(df['Country/Territory'].unique()),
-    default=['United States', 'Germany', 'India', 'Italy', 'Japan', 'United Kingdom']
+    default=['United States', 'Germany', 'Italy', 'Japan', 'United Kingdom']
 )
 
 year_range = st.sidebar.slider(
@@ -468,7 +468,7 @@ filtered_df = df[
     (df['Year'] <= year_range[1])
 ]
 
-tab1, tab2, tab3, tab4 = st.tabs(["Overview", "Climate Trends", "Mortality Analysis", "Correlations"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Overview", "Climate Trends", "Mortality Analysis", "Correlations", " Predictions 2020-2030"])
 
 with tab1:
     st.header("Dataset Overview")
@@ -677,5 +677,207 @@ with tab4:
         textfont=dict(size=10)
     )
     st.plotly_chart(fig_heatmap, use_container_width=True)
+
+with tab5:
+    st.header("Future Mortality Predictions (2020-2030)")
+    
+    # Load predictions
+    try:
+        pred_df = pd.read_csv(os.path.join(RESULTS_DIR, 'temporal_predictions.csv'))
+        
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); 
+                    padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid rgba(102, 126, 234, 0.3);">
+            <p style="color: #e2e8f0; margin: 0;">
+                 <strong>Prophet Time Series Model</strong> trained on 30 years (1990-2019) of historical data<br>
+                 Incorporates <strong>5 climate variables</strong> as predictors: Temperature, Precipitation, Pressure, Dewpoint, Wind Speed<br>
+                 Forecasts for <strong>8 countries</strong> across different continents<br>
+                 Predictions for <strong>top 10 mortality causes</strong> including cardiovascular diseases, neoplasms, and respiratory conditions
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            pred_country = st.selectbox(
+                "Select Country for Prediction",
+                options=sorted(pred_df['Country'].unique()),
+                key='pred_country'
+            )
+        
+        with col2:
+            pred_cause = st.selectbox(
+                "Select Cause of Death",
+                options=sorted(pred_df['Cause'].unique()),
+                key='pred_cause'
+            )
+        
+        # Filter prediction data
+        pred_filtered = pred_df[
+            (pred_df['Country'] == pred_country) &
+            (pred_df['Cause'] == pred_cause)
+        ]
+        
+        # Get historical data for comparison
+        hist_data = df[df['Country/Territory'] == pred_country].copy()
+        hist_data = hist_data[['Year', pred_cause]].groupby('Year')[pred_cause].mean().reset_index()
+        
+        # Create combined historical + prediction plot
+        st.subheader(f"{pred_cause} - Historical vs Predicted Trend")
+        
+        fig = go.Figure()
+        
+        # Historical data
+        fig.add_trace(go.Scatter(
+            x=hist_data['Year'],
+            y=hist_data[pred_cause],
+            name='Historical (1990-2019)',
+            mode='lines+markers',
+            line=dict(color='#667eea', width=3),
+            marker=dict(size=6)
+        ))
+        
+        # Predicted data
+        fig.add_trace(go.Scatter(
+            x=pred_filtered['Year'],
+            y=pred_filtered['Predicted_Rate'],
+            name='Predicted (2020-2030)',
+            mode='lines+markers',
+            line=dict(color='#f093fb', width=3, dash='dash'),
+            marker=dict(size=6, symbol='diamond')
+        ))
+        
+        # Confidence interval
+        fig.add_trace(go.Scatter(
+            x=pred_filtered['Year'],
+            y=pred_filtered['Upper_Bound'],
+            mode='lines',
+            line=dict(width=0),
+            showlegend=False,
+            hoverinfo='skip'
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=pred_filtered['Year'],
+            y=pred_filtered['Lower_Bound'],
+            mode='lines',
+            line=dict(width=0),
+            fillcolor='rgba(240, 147, 251, 0.2)',
+            fill='tonexty',
+            name='Confidence Interval',
+            hoverinfo='skip'
+        ))
+        
+        fig.update_layout(
+            template='plotly_dark',
+            paper_bgcolor='#0e1117',
+            plot_bgcolor='#1e293b',
+            font=dict(color='#ffffff', size=12),
+            title_font=dict(color='#ffffff', size=16),
+            height=600,
+            xaxis=dict(
+                title='Year',
+                gridcolor='#334155',
+                color='#ffffff',
+                range=[1990, 2030]
+            ),
+            yaxis=dict(
+                title='Absolute Deaths',
+                gridcolor='#334155',
+                color='#ffffff'
+            ),
+            legend=dict(
+                font=dict(color='#ffffff'),
+                bgcolor='rgba(30, 41, 59, 0.8)',
+                bordercolor='#667eea',
+                borderwidth=1
+            ),
+            hovermode='x unified'
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Prediction statistics
+        st.subheader("Prediction Statistics")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        last_historical = hist_data.iloc[-1][pred_cause]
+        first_prediction = pred_filtered.iloc[0]['Predicted_Rate']
+        last_prediction = pred_filtered.iloc[-1]['Predicted_Rate']
+        change_percent = ((last_prediction - last_historical) / last_historical) * 100
+        
+        with col1:
+            st.metric(
+                "2019 (Last Historical)",
+                f"{last_historical:,.0f}",
+                help="Last year of historical data"
+            )
+        
+        with col2:
+            st.metric(
+                "2020 (First Prediction)",
+                f"{first_prediction:,.0f}",
+                f"{((first_prediction - last_historical) / last_historical * 100):+.1f}%"
+            )
+        
+        with col3:
+            st.metric(
+                "2030 (Final Prediction)",
+                f"{last_prediction:,.0f}",
+                f"{change_percent:+.1f}%"
+            )
+        
+        with col4:
+            avg_annual_change = (last_prediction - last_historical) / 11
+            st.metric(
+                "Avg Annual Change",
+                f"{avg_annual_change:+,.0f}",
+                help="Average annual change from 2020-2030"
+            )
+        
+        # Detailed predictions table
+        with st.expander("📋 View Detailed Predictions Table"):
+            display_df = pred_filtered[['Year', 'Predicted_Rate', 'Lower_Bound', 'Upper_Bound']].copy()
+            display_df.columns = ['Year', 'Predicted Deaths', 'Lower Bound (95%)', 'Upper Bound (95%)']
+            display_df['Predicted Deaths'] = display_df['Predicted Deaths'].apply(lambda x: f"{x:,.0f}")
+            display_df['Lower Bound (95%)'] = display_df['Lower Bound (95%)'].apply(lambda x: f"{x:,.0f}")
+            display_df['Upper Bound (95%)'] = display_df['Upper Bound (95%)'].apply(lambda x: f"{x:,.0f}")
+            st.dataframe(display_df, use_container_width=True)
+        
+        # Key insights
+        st.subheader("🔍 Key Insights")
+        
+        if change_percent > 0:
+            trend_emoji = "📈"
+            trend_text = "increasing"
+            trend_color = "#ff6b6b"
+        else:
+            trend_emoji = "📉"
+            trend_text = "decreasing"
+            trend_color = "#51cf66"
+        
+        st.markdown(f"""
+        <div style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%); 
+                    padding: 1.5rem; border-radius: 12px; border: 1px solid #334155;">
+            <p style="color: #e2e8f0; font-size: 1.1rem; margin-bottom: 1rem;">
+                {trend_emoji} <strong>Projected Trend:</strong> 
+                <span style="color: {trend_color}; font-weight: bold;">{trend_text.upper()}</span>
+            </p>
+            <ul style="color: #cbd5e1; margin: 0; padding-left: 1.5rem;">
+                <li>Deaths from <strong>{pred_cause}</strong> in <strong>{pred_country}</strong> are projected to 
+                    <strong>{trend_text}</strong> by <strong>{abs(change_percent):.1f}%</strong> from 2019 to 2030</li>
+                <li>This represents an average annual change of <strong>{avg_annual_change:+,.0f}</strong> deaths per year</li>
+                <li>Predictions incorporate climate trends: temperature, precipitation, pressure, and wind patterns</li>
+                <li>Confidence intervals show 95% probability range for actual outcomes</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    except FileNotFoundError:
+        st.error("⚠️ Prediction data not found. Please run `python scripts/09_temporal_prediction_model.py` first.")
+    except Exception as e:
+        st.error(f"Error loading predictions: {str(e)}")
 
 st.sidebar.markdown("---")
