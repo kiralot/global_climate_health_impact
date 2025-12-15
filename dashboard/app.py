@@ -468,7 +468,7 @@ filtered_df = df[
     (df['Year'] <= year_range[1])
 ]
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Overview", "Climate Trends", "Mortality Analysis", "Correlations", " Predictions 2020-2030"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Overview", "Climate Trends", "Mortality Analysis", "Correlations", "Predictions 2020-2030", "ML Model Analysis"])
 
 with tab1:
     st.header("Dataset Overview")
@@ -879,5 +879,290 @@ with tab5:
         st.error("⚠️ Prediction data not found. Please run `python scripts/09_temporal_prediction_model.py` first.")
     except Exception as e:
         st.error(f"Error loading predictions: {str(e)}")
+
+with tab6:
+    st.header("Random Forest Model - Climate Impact Prediction")
+    
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%); 
+                padding: 1.5rem; border-radius: 12px; border: 1px solid #334155; margin-bottom: 2rem;">
+        <h3 style="color: #a78bfa; margin-top: 0;">About this Model</h3>
+        <p style="color: #e2e8f0; font-size: 1rem; line-height: 1.6;">
+            This Random Forest regressor predicts <strong>Neoplasms (Cancer) mortality rates</strong> based on 
+            5 climate variables. The model learns non-linear relationships between environmental conditions 
+            and health outcomes across 49 countries.
+        </p>
+        <p style="color: #cbd5e1; margin-bottom: 0;">
+            <strong>Target:</strong> Neoplasms_Rate_per_100k | 
+            <strong>Algorithm:</strong> Random Forest (100 trees, max_depth=10) |
+            <strong>Data Split:</strong> 80% training, 20% testing
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Load model predictions and model
+    try:
+        import joblib
+        predictions_df = pd.read_csv(os.path.join(RESULTS_DIR, 'model_predictions.csv'))
+        model_path = os.path.join(BASE_DIR, 'models', 'rf_neoplasms_model.pkl')
+        model = joblib.load(model_path)
+        
+        # Model Performance Metrics
+        st.subheader("Model Performance Metrics")
+        
+        from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+        mae = mean_absolute_error(predictions_df['Actual'], predictions_df['Predicted'])
+        rmse = np.sqrt(mean_squared_error(predictions_df['Actual'], predictions_df['Predicted']))
+        r2 = r2_score(predictions_df['Actual'], predictions_df['Predicted'])
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                        padding: 1.5rem; border-radius: 12px; text-align: center;">
+                <p style="color: #e2e8f0; font-size: 0.9rem; margin: 0;">Mean Absolute Error</p>
+                <h2 style="color: #ffffff; margin: 0.5rem 0;">{mae:.2f}</h2>
+                <p style="color: #cbd5e1; font-size: 0.85rem; margin: 0;">deaths per 100k</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+                        padding: 1.5rem; border-radius: 12px; text-align: center;">
+                <p style="color: #e2e8f0; font-size: 0.9rem; margin: 0;">Root Mean Squared Error</p>
+                <h2 style="color: #ffffff; margin: 0.5rem 0;">{rmse:.2f}</h2>
+                <p style="color: #cbd5e1; font-size: 0.85rem; margin: 0;">deaths per 100k</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col3:
+            r2_color = "#51cf66" if r2 > 0.7 else "#ffd93d" if r2 > 0.5 else "#ff6b6b"
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); 
+                        padding: 1.5rem; border-radius: 12px; text-align: center;">
+                <p style="color: #e2e8f0; font-size: 0.9rem; margin: 0;">R² Score</p>
+                <h2 style="color: {r2_color}; margin: 0.5rem 0;">{r2:.3f}</h2>
+                <p style="color: #cbd5e1; font-size: 0.85rem; margin: 0;">variance explained</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # Feature Importance
+        st.subheader("Climate Variable Importance")
+        
+        climate_features = ['Temperature_C', 'Precipitation_mm', 'Surface_Pressure_Pa', 'Dewpoint_K', 'Wind_Speed_ms']
+        feature_importance_df = pd.DataFrame({
+            'Feature': climate_features,
+            'Importance': model.feature_importances_
+        }).sort_values('Importance', ascending=True)
+        
+        fig_importance = go.Figure()
+        fig_importance.add_trace(go.Bar(
+            y=feature_importance_df['Feature'],
+            x=feature_importance_df['Importance'],
+            orientation='h',
+            marker=dict(
+                color=feature_importance_df['Importance'],
+                colorscale=[[0, '#667eea'], [0.5, '#764ba2'], [1, '#f093fb']],
+                showscale=True,
+                colorbar=dict(title="Importance", titlefont=dict(color='#ffffff'), tickfont=dict(color='#ffffff'))
+            ),
+            text=[f"{x:.3f}" for x in feature_importance_df['Importance']],
+            textposition='outside',
+            textfont=dict(color='#ffffff')
+        ))
+        
+        fig_importance.update_layout(
+            template='plotly_dark',
+            paper_bgcolor='#0f1419',
+            plot_bgcolor='#1e293b',
+            font=dict(color='#ffffff', size=14),
+            xaxis_title="Importance Score",
+            yaxis_title="",
+            height=400,
+            margin=dict(l=150, r=50, t=50, b=50)
+        )
+        
+        st.plotly_chart(fig_importance, use_container_width=True)
+        
+        st.markdown("""
+        <div style="background: rgba(102, 126, 234, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #667eea; margin-top: 1rem;">
+            <p style="color: #e2e8f0; margin: 0; font-size: 0.95rem;">
+                <strong>Interpretation:</strong> Higher importance values indicate which climate variables have 
+                the strongest predictive power for cancer mortality rates. The model uses these features to 
+                make predictions about health outcomes based on environmental conditions.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Predictions vs Actual
+        st.subheader("Model Predictions vs Actual Values")
+        
+        fig_scatter = go.Figure()
+        
+        # Perfect prediction line
+        min_val = min(predictions_df['Actual'].min(), predictions_df['Predicted'].min())
+        max_val = max(predictions_df['Actual'].max(), predictions_df['Predicted'].max())
+        fig_scatter.add_trace(go.Scatter(
+            x=[min_val, max_val],
+            y=[min_val, max_val],
+            mode='lines',
+            name='Perfect Prediction',
+            line=dict(color='#51cf66', width=2, dash='dash'),
+            showlegend=True
+        ))
+        
+        # Actual predictions
+        fig_scatter.add_trace(go.Scatter(
+            x=predictions_df['Actual'],
+            y=predictions_df['Predicted'],
+            mode='markers',
+            name='Predictions',
+            marker=dict(
+                size=8,
+                color=predictions_df['Error'].abs(),
+                colorscale=[[0, '#667eea'], [0.5, '#764ba2'], [1, '#f5576c']],
+                showscale=True,
+                colorbar=dict(title="Absolute Error", titlefont=dict(color='#ffffff'), tickfont=dict(color='#ffffff')),
+                line=dict(color='#ffffff', width=0.5)
+            ),
+            text=[f"Actual: {a:.1f}<br>Predicted: {p:.1f}<br>Error: {e:.1f}" 
+                  for a, p, e in zip(predictions_df['Actual'], predictions_df['Predicted'], predictions_df['Error'])],
+            hovertemplate='%{text}<extra></extra>'
+        ))
+        
+        fig_scatter.update_layout(
+            template='plotly_dark',
+            paper_bgcolor='#0f1419',
+            plot_bgcolor='#1e293b',
+            font=dict(color='#ffffff', size=14),
+            xaxis_title="Actual Mortality Rate (per 100k)",
+            yaxis_title="Predicted Mortality Rate (per 100k)",
+            height=500,
+            showlegend=True,
+            legend=dict(font=dict(color='#ffffff'))
+        )
+        
+        st.plotly_chart(fig_scatter, use_container_width=True)
+        
+        # Error Distribution
+        st.subheader("Prediction Error Distribution")
+        
+        fig_error = go.Figure()
+        fig_error.add_trace(go.Histogram(
+            x=predictions_df['Error'],
+            nbinsx=30,
+            marker=dict(
+                color='#667eea',
+                line=dict(color='#ffffff', width=1)
+            ),
+            name='Error Distribution'
+        ))
+        
+        fig_error.update_layout(
+            template='plotly_dark',
+            paper_bgcolor='#0f1419',
+            plot_bgcolor='#1e293b',
+            font=dict(color='#ffffff', size=14),
+            xaxis_title="Prediction Error (Actual - Predicted)",
+            yaxis_title="Frequency",
+            height=400,
+            showlegend=False
+        )
+        
+        st.plotly_chart(fig_error, use_container_width=True)
+        
+        # Interactive Predictor
+        st.subheader("Interactive Climate-Based Predictor")
+        
+        st.markdown("""
+        <div style="background: rgba(167, 139, 250, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #a78bfa; margin-bottom: 1.5rem;">
+            <p style="color: #e2e8f0; margin: 0; font-size: 0.95rem;">
+                Adjust the climate variables below to see how they impact predicted cancer mortality rates. 
+                This demonstrates the model's learned relationships between environmental conditions and health outcomes.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            temp_input = st.slider(
+                "Temperature (°C)",
+                min_value=-10.0,
+                max_value=35.0,
+                value=15.0,
+                step=0.5
+            )
+            
+            precip_input = st.slider(
+                "Precipitation (mm)",
+                min_value=0.0,
+                max_value=200.0,
+                value=60.0,
+                step=5.0
+            )
+            
+            pressure_input = st.slider(
+                "Surface Pressure (Pa)",
+                min_value=95000.0,
+                max_value=105000.0,
+                value=101325.0,
+                step=100.0
+            )
+        
+        with col2:
+            dewpoint_input = st.slider(
+                "Dewpoint (K)",
+                min_value=250.0,
+                max_value=300.0,
+                value=280.0,
+                step=1.0
+            )
+            
+            wind_input = st.slider(
+                "Wind Speed (m/s)",
+                min_value=0.0,
+                max_value=15.0,
+                value=4.0,
+                step=0.5
+            )
+        
+        # Make prediction
+        input_data = pd.DataFrame({
+            'Temperature_C': [temp_input],
+            'Precipitation_mm': [precip_input],
+            'Surface_Pressure_Pa': [pressure_input],
+            'Dewpoint_K': [dewpoint_input],
+            'Wind_Speed_ms': [wind_input]
+        })
+        
+        prediction = model.predict(input_data)[0]
+        
+        st.markdown(f"""
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    padding: 2rem; border-radius: 16px; text-align: center; margin-top: 2rem;">
+            <p style="color: #e2e8f0; font-size: 1.2rem; margin: 0 0 1rem 0;">Predicted Neoplasms Mortality Rate</p>
+            <h1 style="color: #ffffff; margin: 0; font-size: 3rem;">{prediction:.2f}</h1>
+            <p style="color: #cbd5e1; font-size: 1rem; margin: 1rem 0 0 0;">deaths per 100,000 population</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Detailed predictions table
+        with st.expander("View Detailed Predictions Data"):
+            st.dataframe(
+                predictions_df.style.format({
+                    'Actual': '{:.2f}',
+                    'Predicted': '{:.2f}',
+                    'Error': '{:.2f}'
+                }),
+                use_container_width=True
+            )
+        
+    except FileNotFoundError as e:
+        st.error(f"Model files not found. Please run `python scripts/08_predictive_modeling.py` first.")
+    except Exception as e:
+        st.error(f"Error loading model: {str(e)}")
 
 st.sidebar.markdown("---")
