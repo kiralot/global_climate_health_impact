@@ -2,18 +2,45 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import numpy as np
 import os
 
-st.set_page_config(page_title="Climate & Health Dashboard", layout="wide")
+st.set_page_config(
+    page_title="Climate Impact on Public Health",
+    page_icon="🌍",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-PROJECT_DIR = r'c:\Users\Luis\Desktop\global-weather-analysis'
-PROCESSED_DATA_DIR = os.path.join(PROJECT_DIR, 'data', 'processed')
-RESULTS_DIR = os.path.join(PROJECT_DIR, 'results')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROCESSED_DATA_DIR = os.path.join(BASE_DIR, 'data', 'processed')
+RESULTS_DIR = os.path.join(BASE_DIR, 'results')
 
 @st.cache_data
 def load_data():
     df = pd.read_csv(os.path.join(PROCESSED_DATA_DIR, 'integrated_data_1990_2019.csv'))
     corr_df = pd.read_csv(os.path.join(RESULTS_DIR, 'climate_mortality_correlations.csv'))
+    
+    continent_mapping = {
+        'Germany': 'Europe', 'United Kingdom': 'Europe', 'France': 'Europe', 'Italy': 'Europe',
+        'Spain': 'Europe', 'Poland': 'Europe', 'Netherlands': 'Europe', 'Belgium': 'Europe',
+        'Greece': 'Europe', 'Portugal': 'Europe',
+        'China': 'Asia', 'India': 'Asia', 'Japan': 'Asia', 'Indonesia': 'Asia',
+        'Pakistan': 'Asia', 'Bangladesh': 'Asia', 'Russia': 'Asia', 'Turkey': 'Asia',
+        'Iran': 'Asia', 'Thailand': 'Asia',
+        'United States': 'Americas', 'Brazil': 'Americas', 'Mexico': 'Americas', 'Canada': 'Americas',
+        'Argentina': 'Americas', 'Colombia': 'Americas', 'Peru': 'Americas', 'Venezuela': 'Americas',
+        'Chile': 'Americas', 'Ecuador': 'Americas',
+        'Nigeria': 'Africa', 'Ethiopia': 'Africa', 'Egypt': 'Africa', 'South Africa': 'Africa',
+        'Tanzania': 'Africa', 'Kenya': 'Africa', 'Algeria': 'Africa', 'Sudan': 'Africa',
+        'Uganda': 'Africa',
+        'Australia': 'Oceania', 'Papua New Guinea': 'Oceania', 'New Zealand': 'Oceania',
+        'Fiji': 'Oceania', 'Solomon Islands': 'Oceania', 'Samoa': 'Oceania',
+        'Vanuatu': 'Oceania', 'Kiribati': 'Oceania', 'Tonga': 'Oceania', 'Micronesia': 'Oceania'
+    }
+    df['Continent'] = df['Country/Territory'].map(continent_mapping)
+    
     return df, corr_df
 
 df, corr_df = load_data()
@@ -134,6 +161,8 @@ with tab4:
         top_corr = corr_df.nlargest(top_n, 'Correlation')
     else:
         top_corr = corr_df.nsmallest(top_n, 'Correlation')
+        
+        # La figura se ve rara porque los valores son negativos 
     
     fig = px.bar(
         top_corr,
@@ -155,6 +184,7 @@ with tab4:
         columns='Climate_Variable',
         values='Correlation'
     )
+    # Tengo que Fixear el heatmap porque no se ve bien
     
     fig_heatmap = px.imshow(
         heatmap_data,
