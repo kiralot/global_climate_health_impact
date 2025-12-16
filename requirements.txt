@@ -6,7 +6,7 @@ netCDF4==1.7.3
 h5netcdf==1.4.1
 
 # Machine Learning
-scikit-learn==1.5.2
+scikit-learn==1.3.0
 joblib==1.4.2
 prophet==1.1.6
 
